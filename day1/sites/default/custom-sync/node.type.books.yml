@@ -1,0 +1,17 @@
+uuid: 306c870b-5a0b-4d03-8d44-78f426e0e395
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+name: Books
+type: books
+description: 'Its all about books'
+help: ''
+new_revision: false
+preview_mode: 1
+display_submitted: true
