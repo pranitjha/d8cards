@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/Library/WebServer/Documents/academymodule/modules/custom/rsvplist/config/install/rsvplist.settings.yml</file>
+            <file>file:/Library/WebServer/Documents/academymodule/modules/custom/rsvplist/rsvplist.routing.yml</file>
+            <file>file:/Library/WebServer/Documents/academymodule/modules/custom/rsvplist/rsvplist.links.menu.yml</file>
+            <file>file:/Library/WebServer/Documents/academymodule/modules/custom/rsvplist/config/schema/rsvplist.schema.yml</file>
+            <file>file:/Library/WebServer/Documents/academymodule/modules/custom/rsvplist/rsvplist.install</file>
+            <file>file:/Library/WebServer/Documents/academymodule/modules/custom/rsvplist/rsvplist.permissions.yml</file>
+            <file>file:/Library/WebServer/Documents/academymodule/modules/custom/rsvplist/src/Controller/ReportController.php</file>
+            <file>file:/Library/WebServer/Documents/academymodule/modules/custom/rsvplist/rsvplist.services.yml</file>
+            <file>file:/Library/WebServer/Documents/academymodule/modules/custom/rsvplist/rsvplist.module</file>
+            <file>file:/Library/WebServer/Documents/academymodule/modules/custom/rsvplist/src/Form/RSVPForm.php</file>
+            <file>file:/Library/WebServer/Documents/academymodule/modules/custom/rsvplist/src/Form/RSVPSettingsForm.php</file>
+            <file>file:/Library/WebServer/Documents/academymodule/modules/custom/rsvplist/rsvplist.info.yml</file>
+            <file>file:/Library/WebServer/Documents/academymodule/modules/custom/rsvplist/src/EnablerService.php</file>
+            <file>file:/Library/WebServer/Documents/academymodule/modules/custom/rsvplist/src/Plugin/Block/RSVPBlock.php</file>
+        </group>
+    </open-files>
+</project-private>

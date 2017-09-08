@@ -1,0 +1,10 @@
+<?php
+/**
+ * Implementation of hook_form_alter
+ */
+
+function mymodule_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  if ($form_id == 'comment_comment_form') {
+    $form['actions']['submit']['#value'] = t('Comment');
+  }
+}
