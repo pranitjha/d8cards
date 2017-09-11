@@ -1,0 +1,14 @@
+uuid: cc6711fb-2456-4a99-8ea3-b171c79fc995
+name: 'Drupal 8 Production'
+mail: dreampranit@gmail.com
+slogan: ''
+page:
+  403: ''
+  404: ''
+  front: /node
+admin_compact_mode: false
+weight_select_max: 100
+langcode: en
+default_langcode: en
+_core:
+  default_config_hash: AyT9s8OUcclfALRE_imByOMgtZ19eOlqdF6zI3p7yqo
