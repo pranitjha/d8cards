@@ -1,0 +1,7 @@
+mymodule.settings:
+  path: '/mymodule/config'
+  defaults:
+    _form: '\Drupal\mymodule\Form\mymoduleSettingsForm'
+    _title: 'My Module Configuration'
+  requirements:
+    _permission: 'access mymodule configuration'

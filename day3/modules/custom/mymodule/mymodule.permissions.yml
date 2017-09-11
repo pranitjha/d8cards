@@ -1,0 +1,3 @@
+access mymodule configuration:
+  title: 'Access My Module Configuration'
+  description: 'Edit Configuration values.'
