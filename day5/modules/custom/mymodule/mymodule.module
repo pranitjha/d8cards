@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * Implements hook_cron
+ */
+
+use Drupal\Core\Database\Database;
+use Drupal\Component\Serialization\Json;
+
+function mymodule_cron() {
+  $connection = Database::getConnection();
+  $block_query = $connection->select('block_content', 'bc')
+    ->fields('bc', array('id'))
+    ->condition('bc.type', 'stock_exchange_rate_card', '=');
+  $block_data = $block_query->execute();
+  $results = $block_data->fetchAll(\PDO::FETCH_OBJ);
+  foreach ($results as $i => $v) {
+    $block = \Drupal\block_content\Entity\BlockContent::load($results[$i]->id);
+    $symbol = $block->field_symbol->value;
+    $uri = "http://dev.markitondemand.com/MODApis/Api/v2/Quote/jsonp?symbol=" . $symbol . "&callback=myFunction";
+    try {
+      $response = \Drupal::httpClient()->get($uri, [
+        'headers' => ['Accept' => 'application/json'],
+      ]);
+      $json_data = (string) $response->getBody();
+      $json_data = str_replace("myFunction(", "", $json_data);
+      $json_data = str_replace(")", "", $json_data);
+      if (empty($json_data)) {
+        return FALSE;
+      }
+    }
+    catch (RequestException $e) {
+      return FALSE;
+    }
+    $decoded_data = Json::decode($json_data);
+    $block->field_change->value = round($decoded_data['Change'], 2);
+    $block->field_last_price->value = round($decoded_data['LastPrice'], 2);
+    $block->save();
+  }
+}

@@ -1,0 +1,75 @@
+global-styling:
+  version: VERSION
+  css:
+    theme:
+      css/style.css: {}
+      css/colors.css: {}
+
+color.preview:
+  version: VERSION
+  css:
+    theme:
+      color/preview.css: {}
+      css/admin-layout-settings.css: {}
+  js:
+    color/preview.js: {}
+    js/mayo.js: {}
+  dependencies:
+    - color/drupal.color
+#    - core/drupalSettings
+
+maintenance-page:
+  version: VERSION
+  css:
+    theme:
+      css/maintenance-page.css: {}
+      css/colors.css: {}
+  dependencies:
+    - system/maintenance
+    - mayo/global-styling
+
+mayo-columns:
+  version: VERSION
+  js:
+    js/mayo-columns.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+
+responsive-layout:
+  version: VERSION
+  css:
+    theme:
+      public://mayo/mayo_files/mayo.responsive.layout.css: {}
+  dependencies:
+    - mayo/global-styling
+
+black-menu:
+  version: VERSION
+  css:
+    theme:
+      css/black-menu.css: {}
+  dependencies:
+    - mayo/global-styling
+
+superfish:
+  version: VERSION
+  css:
+    theme:
+      css/mayo-superfish.css: {}
+  dependencies:
+    - mayo/global-styling
+
+fontsizer:
+  version: VERSION
+  js:
+    js/mayo-fontsize.js: {}
+  dependencies:
+    - core/jquery
+
+messages:
+  version: VERSION
+  css:
+    component:
+      css/messages.css: { preprocess: false }
