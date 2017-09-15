@@ -1,0 +1,7 @@
+name: My Module
+type: module
+core: '8.x'
+description: CSV to Drupal 8 Migration
+dependencies:
+  - migrate_tools
+  - migrate_plus

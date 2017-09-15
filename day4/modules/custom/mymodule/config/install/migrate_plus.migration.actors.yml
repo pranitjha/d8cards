@@ -1,0 +1,35 @@
+id: custom_node_actors
+label: Import Actors
+migration_tags:
+  - CSV
+source:
+  plugin: csv
+  # Full path to the file.
+  path: public://Movie_DB_actors.csv
+  # Column delimiter. Comma (,) by default.
+  delimiter: ','
+  # Field enclosure. Double quotation marks (") by default.
+  enclosure: '"'
+  # The number of rows at the beginning which are not data.
+  header_row_count: 1
+  keys:
+    - id
+  # Here we identify the columns of interest in the source file.
+  # Each numeric key is the 0-based index of the column.
+  # For each column, the key below is the field name assigned to
+  # the data on import, to be used in field mappings below.
+  # The value is a user-friendly string for display by the
+  # migration UI.
+  column_names:
+    0:
+      id: ID
+    1:
+      name: Name
+process:
+  title: name
+  type:
+    plugin: default_value
+    default_value: actors
+
+destination:
+  plugin: entity:node
