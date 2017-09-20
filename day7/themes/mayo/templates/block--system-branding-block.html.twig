@@ -1,0 +1,47 @@
+{% extends "block.html.twig" %}
+{#
+/**
+ * @file
+ * Mayo's theme implementation for a branding block.
+ *
+ * Each branding element variable (logo, name, slogan) is only available if
+ * enabled in the block configuration.
+ *
+ * Available variables:
+ * - site_logo: Logo for site as defined in Appearance or theme settings.
+ * - site_name: Name for site as defined in Site information settings.
+ * - site_slogan: Slogan for site as defined in Site information settings.
+ */
+#}
+{% set attributes = attributes.addClass('site-branding') %}
+{% block content %}
+      {% if site_logo %}
+        <div id="site_logo">
+        <a href="{{ path('<front>') }}" title="{{ 'Home'|t }}" rel="home">
+          <img src="{{ site_logo }}" alt="{{ 'Home'|t }}" />
+        </a>
+        </div> <!-- /#logo -->
+      {% endif %}
+
+      {% if site_name or site_slogan %}
+        <div id="name-and-slogan" {% if hide_site_name and hide_site_slogan %} class="visually-hidden"{% endif %}>
+          {% if site_name %}
+            {% if title %}
+            <div id="site-name"{% if hide_site_name %} class="visually-hidden"{% endif %}>
+              <strong>
+                <a href="{{ path('<front>') }}" title="{{ 'Home'|t }}" rel="home"><span>{{ site_name }}</span></a>
+              </strong>
+            </div>
+          {# Use h1 when the content title is empty #}
+          {% else %}
+            <h1 id="site-name"{% if hide_site_name %} class="visually-hidden" {% endif %}>
+                <a href="{{ path('<front>') }}" title="{{ 'Home'|t }}" rel="home"><span>{{ site_name }}</span></a>
+              </h1>
+            {% endif %}
+          {% endif %}
+                    {% if site_slogan %}
+            <div id="site-slogan"{% if hide_site_slogan %} class="visually-hidden"{% endif %}>{{ site_slogan }}</div>
+          {% endif %}
+        </div> <!-- /#name-and-slogan -->
+      {% endif %}
+{% endblock %}

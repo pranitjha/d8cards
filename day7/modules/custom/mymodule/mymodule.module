@@ -1,0 +1,14 @@
+<?php
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function user_account_notify_user_insert(EntityInterface $entity) {
+    /** @var QueueInterface $queue */
+    $queue = \Drupal::service('queue')->get('user_register_queue');
+
+    $item = new \stdClass();
+    $item->uid = $entity->id();
+
+    $queue->createItem($item);
+}

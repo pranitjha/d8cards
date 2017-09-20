@@ -1,0 +1,258 @@
+<?php
+
+/**
+ * @file
+ * Functions to support theming in the integrity theme.
+ */
+
+define('THEME_PATH', base_path() . drupal_get_path('theme', 'integrity'));
+// Change the value to increase the slideshow.
+define('SLIDESHOW_COUNT', 5);
+
+use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Xss;
+use Drupal\Core\Template\Attribute;
+use Drupal\file\Plugin\Core\Entity\FileInterface;
+
+/**
+ * Implements hook_preprocess_HOOK() for HTML document templates.
+ *
+ * Adds body classes if certain regions have content.
+ */
+function integrity_preprocess_html(&$variables) {
+  // Add information about the number of sidebars.
+  if (!empty($variables['page']['sidebar_first']) && !empty($variables['page']['sidebar_second'])) {
+    $variables['attributes']['class'][] = 'layout-two-sidebars';
+  }
+  elseif (!empty($variables['page']['sidebar_first'])) {
+    $variables['attributes']['class'][] = 'layout-one-sidebar';
+    $variables['attributes']['class'][] = 'layout-sidebar-first';
+  }
+  elseif (!empty($variables['page']['sidebar_second'])) {
+    $variables['attributes']['class'][] = 'layout-one-sidebar';
+    $variables['attributes']['class'][] = 'layout-sidebar-second';
+  }
+  else {
+    $variables['attributes']['class'][] = 'layout-no-sidebars';
+  }
+
+  if (!empty($variables['page']['featured_top'])) {
+    $variables['attributes']['class'][] = 'has-featured-top';
+  }
+
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for page templates.
+ */
+function integrity_preprocess_page(&$variables) {
+
+  // Since the title and the shortcut link are both block level elements,
+  // positioning them next to each other is much simpler with a wrapper div.
+  if (!empty($variables['title_suffix']['add_or_remove_shortcut']) && $variables['title']) {
+    // Add a wrapper div using the title_prefix and title_suffix render
+    // elements.
+    $variables['title_prefix']['shortcut_wrapper'] = array(
+      '#markup' => '<div class="shortcut-wrapper clearfix">',
+      '#weight' => 100,
+    );
+    $variables['title_suffix']['shortcut_wrapper'] = array(
+      '#markup' => '</div>',
+      '#weight' => -99,
+    );
+    // Make sure the shortcut link is the first item in title_suffix.
+    $variables['title_suffix']['add_or_remove_shortcut']['#weight'] = -100;
+  }
+
+  $slider_contents = array();
+  $resp_contents = array();
+
+  // Slider block contents
+  $slider_contents = _integrity_get_home_block_contents('slider');
+
+  $variables['base_path'] = base_path();
+  $variables['logo'] = THEME_PATH . '/logo.png';
+  if (theme_get_setting('slideshow_display')) {
+    $variables['slider_contents'] = $slider_contents;
+  }
+}
+
+/**
+ * Function to get home page contents for the slider and responsive block in front page
+ */
+function _integrity_get_home_block_contents($sec = '') {
+  $slider_content = array();
+  for ($i = 1; $i <= SLIDESHOW_COUNT; $i++) {
+    $fid = theme_get_setting('slide_image_path'.$i,'integrity');
+    $file = isset($fid[0]) ? file_load($fid[0]) : '';
+    if (!empty($file)) {
+      $uri = $file->getFileUri();
+      $path = file_create_url($uri);
+    }
+    else {
+      $path = base_path() . drupal_get_path('theme', 'integrity') . theme_get_setting('slide_image_path_' . $i, 'integrity');
+    }
+    $active_class = $i == 1 ? 'active' : 'in-active';
+    if (theme_get_setting('slideshow_fullwidth')) {
+      $slider_content[$i] = '<div class="item ' . $active_class . '">
+        <img src="' . $path . '" alt="Flower">
+        <div class="carousel-caption">
+        	<h3>' . theme_get_setting('slide_title_' . $i, 'integrity') . '</h3>
+        	<p>' . theme_get_setting('slide_description_'. $i, 'integrity') . '</p>
+        </div>
+        </div>';
+    }
+    else {
+      $slider_content[$i] = '<div class="item ' . $active_class . ' demo-text-goes-top">
+        <div class="content-wrapper">
+        <div class="slide-body blue-container">
+          <h2>' . theme_get_setting('slide_title_' . $i, 'integrity') . '.</h2>
+          <p>' . theme_get_setting('slide_description_'. $i, 'integrity') . '</p>
+          <div class="demo-devices">
+        	<div class="ipad">
+        	  <div class="content">
+        		<img src=' . $path . ' class="retina" width="181" height="241">
+        	  </div>
+        	</div>
+          </div>
+        </div>
+        </div>
+        </div>';
+    }
+  }
+
+
+  $image_list = array();
+  switch ($sec) {
+    case 'slider':
+      $image_list = $slider_content;
+      break;
+  }
+  return $image_list;
+}
+
+
+
+
+/**
+ * Implements hook_preprocess_HOOK() for maintenance-page.html.twig.
+ */
+function integrity_preprocess_maintenance_page(&$variables) {
+  // By default, site_name is set to Drupal if no db connection is available
+  // or during site installation. Setting site_name to an empty string makes
+  // the site and update pages look cleaner.
+  // @see template_preprocess_maintenance_page
+  if (!$variables['db_is_active']) {
+    $variables['site_name'] = '';
+  }
+
+  // integrity has custom styling for the maintenance page.
+  $variables['#attached']['library'][] = 'integrity/maintenance_page';
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for node.html.twig.
+ */
+function integrity_preprocess_node(&$variables) {
+  // Remove the "Add new comment" link on teasers or when the comment form is
+  // displayed on the page.
+  if ($variables['teaser'] || !empty($variables['content']['comments']['comment_form'])) {
+    unset($variables['content']['links']['comment']['#links']['comment-add']);
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for block.html.twig.
+ */
+function integrity_preprocess_block(&$variables) {
+  // Add a clearfix class to system branding blocks.
+  if ($variables['plugin_id'] == 'system_branding_block') {
+    $variables['attributes']['class'][] = 'clearfix';
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for menu.html.twig.
+ */
+function integrity_preprocess_menu(&$variables) {
+  $variables['attributes']['class'][] = 'clearfix';
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function integrity_form_system_theme_settings_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state) {
+  $form['integrity_settings'] = array(
+    '#type' => 'details',
+    '#title' => t('integrity Settings'),
+    '#collapsible' => FALSE,
+    '#collapsed' => FALSE,
+  );
+  $form['integrity_settings']['slideshow'] = array(
+    '#type' => 'details',
+    '#title' => t('Front Page Slideshow'),
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE,
+  );
+  $form['integrity_settings']['slideshow']['slideshow_display'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Show slideshow'),
+    '#default_value' => theme_get_setting('slideshow_display'),
+    '#description'   => t("Check this option to show Slideshow in front page. Uncheck to hide."),
+  );
+  $form['integrity_settings']['slideshow']['slideshow_fullwidth'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Full width slideshow'),
+    '#default_value' => theme_get_setting('slideshow_fullwidth'),
+    '#description'   => t("Eable full width image slideshow."),
+  );
+  $form['integrity_settings']['slideshow']['slide'] = array(
+    '#markup' => t('You can change the title, description and image of each slide in the following Slide Setting fieldsets.'),
+  );
+
+  for ($i = 1; $i <= SLIDESHOW_COUNT; $i++) {
+    $form['integrity_settings']['slideshow']['slide' . $i] = array(
+      '#type' => 'details',
+      '#title' => t('Slide '.$i),
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+    );
+    $form['integrity_settings']['slideshow']['slide' . $i]['slide_title_' . $i] = array(
+      '#type' => 'textfield',
+      '#title' => t('Slide '.$i.' Title'),
+      '#default_value' => theme_get_setting('slide_title_' . $i,'integrity'),
+    );
+    $form['integrity_settings']['slideshow']['slide' . $i]['slide_description_' . $i] = array(
+      '#type' => 'textarea',
+      '#title' => t('Slide '.$i.' Description'),
+      '#default_value' => theme_get_setting('slide_description_' . $i,'integrity'),
+    );
+    $form['integrity_settings']['slideshow']['slide' . $i]['slide_image_path' . $i] = array(
+      '#type' => 'managed_file',
+      '#title' => t('Slide '.$i.' Image'),
+      '#default_value' => theme_get_setting('slide_image_path'.$i,'integrity'),
+      '#upload_location' => 'public://',
+    );
+  }
+  // Custom submit to save the file permenant.
+  $form['#submit'][] = 'integrity_settings_form_submit';
+}
+
+/**
+ * Custom submit handler for integrity settings form.
+ */
+function integrity_settings_form_submit(&$form, \Drupal\Core\Form\FormStateInterface $form_state) {
+  $account = \Drupal::currentUser();
+  $values = $form_state->getValues();
+  for ($i = 0; $i <= SLIDESHOW_COUNT; $i++) {
+    if (isset($values['slide_image_path' . $i]) && !empty($values['slide_image_path' . $i])) {
+      // Load the file via file.fid.
+      $file = file_load($values['slide_image_path' . $i][0]);
+      // Change status to permanent.
+      $file->setPermanent();
+      $file->save();
+      $file_usage = \Drupal::service('file.usage');
+      $file_usage->add($file, 'user', 'user', $account->id());
+    }
+  }
+}

@@ -1,0 +1,67 @@
+global-css:
+  version: VERSION
+  css:
+    theme:
+     css/font-awesome.min.css: {}
+     css/flexslider.css: {}
+     css/style.css: {}
+  js:
+    js/custom.js: {}
+    js/jquery.flexslider-min.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal.ajax
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery.once
+
+color-red:
+  version: VERSION
+  css:
+    theme:
+      css/red.css: {}
+
+color-green:
+  version: VERSION
+  css:
+    theme:
+      css/green.css: {}
+
+color-yellow:
+  version: VERSION
+  css:
+    theme:
+      css/yellow.css: {}
+
+color-blue:
+  version: VERSION
+  css:
+    theme:
+      css/blue.css: {}
+
+color-brown:
+  version: VERSION
+  css:
+    theme:
+      css/brown.css: {}
+
+color-orange:
+  version: VERSION
+  css:
+    theme:
+      css/orange.css: {}
+
+
+business-bootstrap:
+  version: 1.x
+  css:
+    theme:
+      includes/bootstrap/css/bootstrap.min.css: {}
+  js:
+    includes/bootstrap/js/bootstrap.min.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal.ajax
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery.once
