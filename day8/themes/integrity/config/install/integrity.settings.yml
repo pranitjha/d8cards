@@ -1,0 +1,24 @@
+features:
+   comment_user_picture: true
+   comment_user_verification: true
+   favicon: true
+   logo: true
+   name: true
+   node_user_picture: true
+   slogan: true
+slideshow_display: 1
+slide_title_1: 'KICKSTART YOUR WEBSITE'
+slide_description_1: 'Slider Revolution is the highly acclaimed slide-based displaying solution, thousands of businesses, theme developers and everyday people use and love!' 
+slide_image_path_1: '/placeholders/screenshots/ss_1.png'
+slide_title_2: 'Fully Professional'
+slide_description_2: 'Fully Professional Fully Responsive Businesses, theme developers and everyday slide-based displaying solution, thousands of people use and love!' 
+slide_image_path_2: '/placeholders/screenshots/ss_1.png'
+slide_title_3: 'KICKSTART YOUR WEBSITE'
+slide_description_3: 'Slider Revolution is the highly acclaimed slide-based displaying solution, thousands of businesses, theme developers and everyday people use and love!' 
+slide_image_path_3: '/placeholders/screenshots/ss_1.png'
+slide_title_4: 'Fully Professional'
+slide_description_4: 'Fully Professional Fully Responsive Businesses, theme developers and everyday slide-based displaying solution, thousands of people use and love!' 
+slide_image_path_4: '/placeholders/screenshots/ss_1.png'
+slide_title_5: 'KICKSTART YOUR WEBSITE'
+slide_description_5: 'Slider Revolution is the highly acclaimed slide-based displaying solution, thousands of businesses, theme developers and everyday people use and love!' 
+slide_image_path_5: '/placeholders/screenshots/ss_1.png'

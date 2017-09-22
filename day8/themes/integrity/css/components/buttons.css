@@ -1,0 +1,36 @@
+/* ---------------- Buttons    ---------------- */
+
+.button {
+  background-color: #4BADEF;
+  color: white;
+  font-weight: normal;
+  text-align: center;
+  padding: 8px 12px;
+  border: 1px solid #4BADEF;
+  border-radius: 2px;
+}
+.button:hover,
+.button:active,
+.button:focus {
+  background: rgb(68, 147, 201);
+  color: white;
+  text-decoration: none;
+  border: 1px solid rgb(68, 147, 201);
+}
+.button.is-disabled:hover,
+.button.is-disabled:active,
+.button.is-disabled:focus,
+.button.is-disabled {
+  background: #ededed;
+  border-color: #bbb;
+  color: #717171;
+  cursor: default;
+}
+.image-button.is-disabled:hover,
+.image-button.is-disabled:active,
+.image-button.is-disabled:focus,
+.image-button.is-disabled {
+  background: transparent;
+  opacity: 0.5;
+  cursor: default;
+}
