@@ -1,101 +1,79 @@
 <?php
-
 /**
  * @file
- * Contains Drupal\user_account_notify\Plugin\QueueWorker\UserNotify.
+ * Contains Drupal\cron_queue_email\Plugin\QueueWorker\RegisteredUserEmailBase.php
  */
 
-namespace Drupal\mymodule\Plugin\QueueWorker;
+namespace Drupal\cron_queue_email\Plugin\QueueWorker;
 
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Mail\MailManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Queue\QueueWorkerBase;
-use Drupal\user\UserInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+
 /**
- * Notify users about their account changes.
- *
- * @QueueWorker(
- *   id = "user_register_queue",
- *   title = @Translation("User Register Mail Queue"),
- *   cron = {"time" = 30}
- * )
+ * Provides base functionality for the NodePublish Queue Workers.
  */
-class UserNotify extends QueueWorkerBase implements ContainerFactoryPluginInterface {
+abstract class RegisteredUserEmailBase extends QueueWorkerBase implements ContainerFactoryPluginInterface {
 
-  /**
-   * The user storage.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $userStorage;
-
-  /**
-   * The mail manager.
-   *
-   * @var \Drupal\core\Mail\MailManagerInterface
-   */
-  protected $mailManager;
-
-  /**
-   * The logger.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
-
-  /**
-   * Creates a new UserNotify.
-   *
-   * @param \Drupal\Core\Entity\EntityStorageInterface $user_storage
-   *   The user storage.
-   * @param \Drupal\Core\Mail\MailManagerInterface $mail_manager
-   *   The mail manager.
-   * @param \Psr\Log\LoggerInterface $logger
-   *   The logger.
-   */
-  public function __construct(EntityStorageInterface $user_storage, MailManagerInterface $mail_manager, LoggerInterface $logger) {
-    $this->userStorage = $user_storage;
-    $this->mailManager = $mail_manager;
-    $this->logger = $logger;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $container->get('entity.manager')->getStorage('user'),
-      $container->get('plugin.manager.mail'),
-      $container->get('logger.factory')->get('user_account_notify')
-    );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function processItem($data) {
-    /** @var UserInterface $user */
-    $account = $this->userStorage->load($data->uid);
-    if ($account instanceof UserInterface) {
-      $params = [
-        'data' => $data,
-        'account' => $account,
-      ];
-
-      $message = $this->mailManager
-        ->mail('mymodule', $data->op, $account->getEmail(), $account->getPreferredLangcode(), $params);
-
-      if ($message['result']) {
-        $this->logger->notice('Sent email to %recipient', ['%recipient' => $message['to']]);
-      }
-      else {
-        $this->logger->error('Unable to send email to %recipient', ['%recipient' => $message['to']]);
-      }
+    /**
+     * The node storage.
+     *
+     * @var \Drupal\Core\Entity\EntityStorageInterface
+     */
+    protected $userStorage;
+    protected $mailManager;
+    /**
+     * Creates a new RegisteredUserEmailBase object.
+     *
+     * @param \Drupal\Core\Entity\EntityStorageInterface $node_storage
+     *   The node storage.
+     */
+    public function __construct(EntityStorageInterface $user_storage,  MailManagerInterface $mail_manager) {
+        $this->userStorage = $user_storage;
+        $this->mailManager = $mail_manager;
     }
-  }
 
+    /**
+     * {@inheritdoc}
+     */
+    public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+        return new static(
+            $container->get('entity.manager')->getStorage('user'),
+            $container->get('plugin.manager.mail')
+        );
+    }
+
+    /**
+     * Publishes a node.
+     *
+     * @param NodeInterface $node
+     * @return int
+     */
+    protected function sendEmail($user) {
+        $params['message'] = 'Welcome new registered user. This is the email body';
+        $result = $this->mailManager->mail('mymodule', 'register_user_send_email', 'pranit.er@gmail.com', 'en', $params , $reply=NULL,$send= TRUE);
+        //mail($module, $key, $to, $langcode, $params = array(), $reply = NULL, $send = TRUE);
+        if ($result['result'] !== true) {
+            $message = t('There was a problem sending your email notification to @email for creating node @id.', array('@email' => $to, '@id' => $entity->id()));
+            drupal_set_message($message, 'error');
+            \Drupal::logger('d8mail')->error($message);
+            return;
+        }
+        $message= 'email sent';
+        drupal_set_message($message);
+        \Drupal::logger('d8mail')->notice($message);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function processItem($data) {
+        $user = $this->userStorage->load($data->uid);
+        if ($user) {
+            return $this->sendEmail($user);
+        }
+    }
 }

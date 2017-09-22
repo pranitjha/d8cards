@@ -1,5 +1,9 @@
 <?php
 
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Queue\QueueFactory;
+use Drupal\Core\Queue\QueueInterface;
+
 /**
  * Implements hook_ENTITY_TYPE_insert().
  */
@@ -11,4 +15,18 @@ function user_account_notify_user_insert(EntityInterface $entity) {
     $item->uid = $entity->id();
 
     $queue->createItem($item);
+}
+
+
+/**
+ * Implements hook_mail().
+ */
+function cron_queue_email_mail($key, &$message, $params) {
+    switch ($key) {
+        case 'register_user_send_email':
+            $message['from'] = \Drupal::config('system.site')->get('mail');
+            $message['subject'] = t('Welcome new user.');
+            $message['body'][] = SafeMarkup::checkPlain($params['message']);
+            break;
+    }
 }
