@@ -1,0 +1,43 @@
+name: 'Business'
+type: theme
+description: 'Business is a Responsive business Drupal 8 theme. Developed by <a href="http://dropthemes.in">Dropthemes.in</a>.'
+base theme: classy
+# core: 8.x
+libraries:
+  - business/business-bootstrap
+  - business/global-css
+
+# Regions
+regions:
+  header: Header
+  homequotes: Home Quotes
+  home_high1: Home Highlight 1
+  home_high2: Home Highlight 2
+  home_high3: Home Highlight 3
+  content_top: Content Top
+  content: Content
+  sidebar_first: First Sidebar
+  sidebar_second: Second Sidebar
+  footer_first: First Bottom
+  footer_second: Second Bottom
+  footer_third: Third Bottom
+  footer_fourth: Fourth Bottom
+  footer: Footer
+
+# Features
+features:
+  - 'logo'
+  - 'name'
+  - 'slogan'
+  - 'node_user_picture'
+  - 'comment_user_picture'
+  - 'comment_user_verification'
+  - 'favicon'
+  - 'main_menu'
+  - 'secondary_menu'
+
+# Information added by Drupal.org packaging script on 2016-10-07
+version: '8.x-1.7'
+core: '8.x'
+project: 'business'
+datestamp: 1475815741

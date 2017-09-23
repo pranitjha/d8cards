@@ -1,0 +1,11 @@
+table:
+  css:
+    component:
+      css/table.css: {}
+
+css_on_page:
+  css:
+    component:
+      css/custom.css: {weight: 100}
+  js:
+    js/custom.js: {}
