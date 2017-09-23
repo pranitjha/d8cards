@@ -1,0 +1,45 @@
+name: Mayo
+type: theme
+description: 'Simple but fully customizable and colorable responsive layout theme.'
+# version: VERSION
+# core: 8.x
+libraries:
+  - mayo/global-styling
+ckeditor_stylesheets:
+  - css/ckeditor-iframe.css
+# Regions
+# Footer listed first to make it the default region.
+regions:
+   footer: 'Footer'
+   header: 'Header'
+   help: 'Help'
+   menubar: 'Menu bar'
+   highlighted: 'Highlighted'
+   banner_top: 'Banner top'
+   top_column_first: 'Top first column'
+   top_column_second: 'Top second column'
+   top_column_third: 'Top third column'
+   top_column_fourth: 'Top fourth column'
+   breadcrumb: Breadcrumb
+   content: 'Content'
+   sidebar_first: 'Sidebar first'
+   sidebar_second: 'Sidebar second'
+   bottom_column_first: 'Bottom first column'
+   bottom_column_second: 'Bottom second column'
+   bottom_column_third: 'Bottom third column'
+   bottom_column_fourth: 'Bottom fourth column'
+   banner_bottom: 'Banner bottom'
+   footer_column_first: 'Footer first column'
+   footer_column_second: 'Footer second column'
+   footer_column_third: 'Footer third column'
+   footer_column_fourth: 'Footer fourth column'
+#plugins
+plugins:
+   page_layout:
+   - layouts: 'layouts/core'
+
+# Information added by Drupal.org packaging script on 2016-05-09
+version: '8.x-1.3'
+core: '8.x'
+project: 'mayo'
+datestamp: 1462820623
