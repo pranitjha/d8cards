@@ -1,0 +1,7 @@
+name: RSVP List
+description: Allow users to add RSVP for Events.
+package: RSVP List
+type: module
+version: 1.0
+core: 8.x
+configure: rsvplist.admin_settings

@@ -1,0 +1,7 @@
+mymodule.index:
+  path: '/attach-assets-example'
+  defaults:
+    _controller: '\Drupal\attach_assets\Controller\AttachAssetsController::index'
+    _title: 'D8 - Day 9 (Attach assets)'
+  requirements:
+    _permission: 'access content'
