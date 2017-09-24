@@ -1,0 +1,338 @@
+<?php
+
+/**
+ * @file
+ * Contains theme override functions and preprocess functions
+ */
+
+use Drupal\Core\Template\RenderWrapper;
+use Drupal\Core\Template\Attribute;
+use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\Xss;
+use Drupal\Core\Url;
+use Drupal\Core\Config\ConfigFactoryInterface;
+
+/**
+ * Includes for MAYO css creation form settings.
+ */
+global  $theme_name, $path_to_mayo;
+$theme_name = \Drupal::theme()->getActiveTheme()->getName();
+$path_to_mayo = drupal_get_path('theme', 'mayo');
+include_once($path_to_mayo . '/inc/get.inc');        // get theme info, settings, css etc
+
+function mayo_build_columns_width($columns) {
+  $style = array();
+  $num_columns = 0;
+  $first = -1;
+
+  for ($i = 0 ; $i < 4 ; $i++) {
+    if ($columns[$i]) {
+      if ($first == -1) $first = $i;
+      $last = $i;
+      $num_columns++;
+    }
+  }
+  if (!$num_columns) return '';
+  $column_width = round(100 / $num_columns, 2) . '%';  // calculate percent width of a column
+  return $column_width;
+}
+
+/**
+ * Implements hook_form_FORM_ID_form_alter().
+ * Custom search block form
+ *  No 'submit button'
+ *  Use javascript to show/hide the 'search this site' prompt inside of the text field
+ */
+function mayo_form_search_block_form_alter(&$form, &$form_state, $form_id) {
+  global $theme_name;
+  if ($form_id == 'search_block_form') {
+    unset($form['actions']['submit']);
+    $form['keys']['#size'] = theme_get_setting('searchbox_size', $theme_name);
+    $prompt = t('search this site');
+    $form['keys']['#default_value'] = $prompt;
+    $form['actions']['submit']['#type'] = 'hidden';
+    $form['keys']['#attributes'] = array('onblur' => "if (this.value == '') {this.value = '{$prompt}';}", 'onfocus' => "if (this.value == '{$prompt}') {this.value = '';}" );
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for maintenance-page.html.twig.
+ * From Bartik.
+ */
+function mayo_preprocess_maintenance_page(&$variables) {
+  // By default, site_name is set to Drupal if no db connection is available
+  // or during site installation. Setting site_name to an empty string makes
+  // the site and update pages look cleaner.
+  // @see template_preprocess_maintenance_page
+  if (!$variables['db_is_active']) {
+    $variables['site_name'] = '';
+  }
+  // Normally we could attach libraries via hook_page_alter(), but when the
+  // database is inactive it's not called so we add them here.
+  $variables['#attached']['library'][] = 'mayo/maintenance-page';
+
+  // Set the options that apply to both page and maintenance page.
+  _mayo_process_page($variables);
+}
+
+/**
+ * Helper function for handling the site name and slogan.
+ */
+function _mayo_process_page(&$variables) {
+  $site_config = \Drupal::configFactory()->getEditable('system.site');
+  // Always print the site name and slogan, but if they are toggled off, we'll
+  // just hide them visually.
+  $variables['hide_site_name']   = theme_get_setting('features.name') ? FALSE : TRUE;
+  $variables['hide_site_slogan'] = theme_get_setting('features.slogan') ? FALSE : TRUE;
+  if ($variables['hide_site_name']) {
+    // If toggle_name is FALSE, the site_name will be empty, so we rebuild it.
+    $variables['site_name'] = Html::escape($site_config->get('name'));
+  }
+  if ($variables['hide_site_slogan']) {
+    // If toggle_site_slogan is FALSE, the site_slogan will be empty, so we
+    // rebuild it.
+    $variables['site_slogan'] = Xss::filterAdmin($site_config->get('slogan'));
+  }
+}
+/**
+ * Implements hook_preprocess_html().
+ */
+function mayo_preprocess_html(&$variables) {
+
+  // Add information about the number of sidebars.
+  if (!empty($variables['page']['sidebar_first']) && !empty($variables['page']['sidebar_second'])) {
+    $variables['attributes']['class'][] = 'two-sidebars';
+  }
+  elseif (!empty($variables['page']['sidebar_first'])) {
+    $variables['attributes']['class'][] = 'one-sidebar';
+    $variables['attributes']['class'][] = 'sidebar-first';
+  }
+  elseif (!empty($variables['page']['sidebar_second'])) {
+    $variables['attributes']['class'][] = 'one-sidebar';
+    $variables['attributes']['class'][] = 'sidebar-second';
+  }
+  else {
+    $variables['attributes']['class'][] = 'no-sidebars';
+  }
+
+  $theme_name = \Drupal::theme()->getActiveTheme()->getName();
+  // Adds classes to <body class="">
+  // See https://drupal.org/node/1727592
+  $settings_array = array(
+    'round_corners',
+    'dark_messages',
+  );
+  foreach ($settings_array as $setting) {
+    if (theme_get_setting($setting) !== 0) {
+      $variables['attributes']['class'][] = theme_get_setting($setting);
+    }
+  }
+  // Add inline body styles to head for font family and size.
+  $font_family = array(
+  // Added Japanese font support
+    0 => "font-family: Georgia, 'Palatino Linotype', 'Book Antiqua', 'URW Palladio L',
+      Baskerville, Meiryo, 'Hiragino Mincho Pro', 'MS PMincho', serif; ",
+    1 => "font-family: Verdana, Geneva, Arial, 'Bitstream Vera Sans', 'DejaVu Sans',
+      Meiryo, 'Hiragino Kaku Gothic Pro', 'MS PGothic', Osaka, sans-serif; ",
+  );
+  // Add font related inline styles
+  $base_font_size = theme_get_setting('base_font_size');
+  $style = 'font-size: ' . $base_font_size . '; ';
+  $base_font_family = theme_get_setting('base_font_family');
+  if ($base_font_family == 2) { // Custom
+    $style .= 'font-family: ' . Xss::filterAdmin(theme_get_setting('base_custom_font_family')) . ';';
+  }
+  else {
+    $style .= $font_family[$base_font_family];
+  }
+
+  $heading_font_family = theme_get_setting('heading_font_family');
+  $style_b = '';
+  if ($heading_font_family == 2) {  //Custom
+    $style_b .= 'font-family: ' . Xss::filterAdmin(theme_get_setting('heading_custom_font_family')) . ';';
+  }
+  else {
+    $style_b = $font_family[$heading_font_family];
+  }
+  $variables['base_font'] = "\r<style media=\"all\">\r/* <![CDATA[ */\r\nbody {" . $style . "}\r\nh1,h2,h3,h4,h5 {" . $style_b . "}\r\n/* ]]> */\r\n</style>";
+
+  if ($heading_font_family == 1) {
+    $variables['base_font'] = "\r<style media=\"all\">\r/* <![CDATA[ */\r\nbody {" . $style . "}\r\nh1,h2,h3,h4,h5 {" . $style_b . "}\r\n.sidebar h2 { font-size: 1.2em; }\r\n#content .node h2 { font-size: 1.4em; }\r\n/* ]]> */\r\n</style>";
+  }
+}
+
+/**
+ * Process variables for page.html.twig.
+ *
+ * @see page.html.twig
+ */
+function mayo_preprocess_page(&$variables) {
+  global $theme_name;
+  // Add optional stylesheets
+  if (theme_get_setting('menubar_style') == 2) {
+    $black_menu['#attached']['library'][] = 'mayo/black-menu';
+    drupal_render($black_menu);
+  }
+
+  $base_vmargin = theme_get_setting('base_vmargin', $theme_name);
+    if (\Drupal::service('router.admin_context')->isAdminRoute(\Drupal::routeMatch()->getRouteObject())) $base_vmargin = '0px'; // admin page
+    if (empty($base_vmargin)) $base_vmargin = '0px';
+  $variables['page_wrapper_style'] = ' margin-top: ' . $base_vmargin . '; margin-bottom: ' . $base_vmargin . ';';
+
+  $layout_style = theme_get_setting('layout_style', $theme_name);
+  $page_margin = theme_get_setting('page_margin', $theme_name);
+  if (empty($page_margin)) $page_margin = '0px';
+  if (\Drupal::service('router.admin_context')->isAdminRoute(\Drupal::routeMatch()->getRouteObject())) $page_margin = '20px'; // admin page
+  if ($layout_style == 1) {
+    $variables['page_style'] = 'padding: ' . $page_margin . ';';
+  }
+  else {
+    $variables['main_style'] = 'padding: 0px ' . $page_margin . '; box-sizing: border-box;';
+  }
+
+  $variables['header_style'] = '';
+
+  $header_bg_file = theme_get_setting('header_bg_file', $theme_name);
+  if ($header_bg_file) {
+    $variables['header_style'] .= 'filter:;background: url(' . $header_bg_file . ') repeat ';
+    $variables['header_style'] .= theme_get_setting('header_bg_alignment', $theme_name) . ';';
+  }
+  if ($layout_style == 2 || $header_bg_file) {
+    // no header margin, so skip header borders to make it nicer
+    $variables['header_style'] .= 'border: none;';
+  }
+  else {
+    $header_border_width = theme_get_setting('header_border_width', $theme_name);
+    $variables['header_style'] .= ' border-width: ' . $header_border_width . ';';
+  }
+
+  $header_watermark = theme_get_setting('header_watermark', $theme_name);
+  if($header_watermark) {
+    $variables['header_watermark_style']   = 'background-image: url(' . Url::fromUri('base:' . drupal_get_path('theme', $theme_name) . '/images/pat-' . $header_watermark . '.png')->toString() . ');';
+  }
+
+  if (theme_get_setting('header_searchbox', $theme_name) && \Drupal::moduleHandler()->moduleExists('search')) {
+    $variables['header_searchbox'] = theme_get_setting('header_searchbox', $theme_name);
+    $variables['output_form'] = \Drupal::formBuilder()->getForm('Drupal\search\Form\SearchBlockForm');
+  }
+
+  $variables['menubar_background'] = theme_get_setting('menubar_background', $theme_name);
+  if ($variables['menubar_background'] == 1) {
+    $variables['menubar_bg_value'] = 'background-color:' . theme_get_setting('menubar_bg_value', $theme_name);
+  }
+
+  $variables['header_fontsizer'] = theme_get_setting('header_fontsizer', $theme_name);
+  $variables['sb_first_width'] = theme_get_setting('sidebar_first_width', $theme_name);
+    if (empty($variables['sb_first_width'])) $variables['sb_first_width'] = '25%';
+  $variables['sb_first_style'] = 'width: ' . $variables['sb_first_width'] . ';';
+  $variables['sb_second_width'] = theme_get_setting('sidebar_second_width', $theme_name);
+    if (empty($variables['sb_second_width'])) $variables['sb_second_width'] = '25%';
+  $variables['sb_second_style'] = 'width: ' . $variables['sb_second_width'] . ';';
+
+  $content_width = 100;
+  if ($variables['page']['sidebar_first']) {
+    $content_width -= intval(preg_replace('/%/', '', $variables['sb_first_width']));
+  }
+  if ($variables['page']['sidebar_second']) {
+    $content_width -= intval(preg_replace('/%/', '', $variables['sb_second_width']));
+  }
+  $variables['content_style'] = 'width: ' . $content_width . '%;';
+
+  if (theme_get_setting('header_fontsizer', $theme_name)) {
+    $font_resize['#attached']['library'][] = 'mayo/fontsizer';
+    drupal_render($font_resize);
+  }
+
+  $page = $variables['page'];
+  // Attach javascript for equal height columns.
+  if ($page['top_column_first'] ||
+      $page['top_column_second'] ||
+      $page['top_column_third'] ||
+      $page['top_column_fourth'] ||
+      $page['bottom_column_first'] ||
+      $page['bottom_column_second'] ||
+      $page['bottom_column_third'] ||
+      $page['bottom_column_fourth'] ||
+      $page['footer_column_first'] ||
+      $page['footer_column_second'] ||
+      $page['footer_column_third'] ||
+      $page['footer_column_fourth']) {
+  $libraries['#attached']['library'][] = 'mayo/mayo-columns';
+  drupal_render($libraries);
+  }
+
+  $variables['top_columns_width'] =  mayo_build_columns_width( array(
+            $page['top_column_first'],
+            $page['top_column_second'],
+            $page['top_column_third'],
+            $page['top_column_fourth'],
+          ));
+  $variables['bottom_columns_width'] =  mayo_build_columns_width( array(
+            $page['bottom_column_first'],
+            $page['bottom_column_second'],
+            $page['bottom_column_third'],
+            $page['bottom_column_fourth'],
+          ));
+  $variables['footer_columns_width'] =  mayo_build_columns_width( array(
+            $page['footer_column_first'],
+            $page['footer_column_second'],
+            $page['footer_column_third'],
+            $page['footer_column_fourth'],
+          ));
+
+  // Pass the main menu and secondary menu to the template.
+  if (!empty($variables['main_menu'])) {
+    $variables['main_menu']['#attributes']['id'] = 'main-menu';
+    $variables['main_menu']['#attributes']['class'] = array('links', 'inline', 'clearfix');
+  }
+  if (!empty($variables['secondary_menu'])) {
+    $variables['secondary_menu']['#attributes']['id'] = 'secondary-menu';
+    $variables['secondary_menu']['#attributes']['class'] = array('links', 'inline', 'clearfix');
+  }
+
+  // Since the title and the shortcut link are both block level elements,
+  // positioning them next to each other is much simpler with a wrapper div.
+  if (!empty($variables['title_suffix']['add_or_remove_shortcut']) && $variables['title']) {
+    // Add a wrapper div using the title_prefix and title_suffix render elements.
+    $variables['title_prefix']['shortcut_wrapper'] = array(
+      '#markup' => '<div class="shortcut-wrapper clearfix">',
+      '#weight' => 100,
+    );
+    $variables['title_suffix']['shortcut_wrapper'] = array(
+      '#markup' => '</div>',
+      '#weight' => -99,
+    );
+    // Make sure the shortcut link is the first item in title_suffix.
+    $variables['title_suffix']['add_or_remove_shortcut']['#weight'] = -100;
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for node templates.
+ */
+function mayo_preprocess_node(&$variables) {
+  // Remove the "Add new comment" link on teasers or when the comment form is
+  // displayed on the page.
+  if ($variables['teaser'] || !empty($variables['content']['comments']['comment_form'])) {
+    unset($variables['content']['links']['comment']['#links']['comment-add']);
+  }
+}
+
+/**
+ * Implements hook_page_attachments_alter().
+ */
+function mayo_page_attachments_alter(&$page) {
+  global $theme_name;
+
+  if (theme_get_setting('menubar_style', $theme_name) == 2) {
+    $page['#attached']['library'][] = 'mayo/black-menu';
+  }
+  // Get the path to the directory where our responsive.layout.css file is saved.
+  $path = \Drupal::configFactory()->getEditable('mayo.settings')->get('theme_' . $theme_name . '_files_directory');
+  // Load the responsive layout
+  $filepath = $path . '/' . $theme_name . '.responsive.layout.css';
+  //$media_query = 'only screen'; // keyword "only" hide this from unsupporting user agents
+  if (file_exists($filepath)) {
+    $page['#attached']['library'][] = $theme_name . '/responsive-layout';
+  }
+}
