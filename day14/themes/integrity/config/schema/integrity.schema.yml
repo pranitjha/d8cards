@@ -1,0 +1,5 @@
+# Schema for the configuration files of the Bartik theme.
+
+integrity.settings:
+  type: theme_settings
+  label: 'Integrity settings'

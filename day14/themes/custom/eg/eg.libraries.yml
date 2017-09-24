@@ -1,0 +1,20 @@
+eg-css:
+  version: 1.0
+  css:
+    base:
+      css/base/styles.css: {}
+    layout:
+      css/layout/layout.css: {}
+    components:
+      css/components/menu.css: {}
+      css/components/button.css: {}
+      css/components/views.css: {}
+            
+quicksand:
+  license:
+    name: SIL Open Font License 1.1
+    url: http://scripts.sil.org/scripts/page.php?site_id=nrsi$id=OFL
+  css:
+    theme:
+      //fonts.googleapis.com/css?family=Quicksand: { type: external }
+      css/styles.css: {}

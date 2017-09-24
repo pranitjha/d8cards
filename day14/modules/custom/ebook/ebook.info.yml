@@ -1,0 +1,12 @@
+name: eBook
+description: 'Provides eBook content type and related configuration. eBook  data is captured here.'
+type: module
+core: 8.x
+dependencies:
+  - field
+  - file
+  - image
+  - menu_ui
+  - node
+  - text
+  - user

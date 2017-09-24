@@ -1,0 +1,14 @@
+name: D8Cards Theme
+type: theme
+description: My D8Cards Theme
+package: D8
+core: 8.x
+libraries:
+  - d8cards_theme/global-styling
+ 
+base theme: stable
+
+regions:
+  content: Content
+  sidebar1: Sidebar1
+  sidebar2: Sidebar2

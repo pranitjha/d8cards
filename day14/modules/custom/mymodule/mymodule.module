@@ -1,0 +1,14 @@
+<?php
+
+/**
+ * Implements hook_node_update
+ * @param $node
+ */
+function mymodule_node_update($node) {
+  \Drupal::logger('mymodule')->info('Node with title %node_title of type
+%node_type has been updated.',
+    array(
+      '%node_title' => $node->title->value,
+      '%node_type' => $node->type->target_id,
+    ));
+}
