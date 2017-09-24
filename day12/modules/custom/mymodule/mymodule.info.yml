@@ -1,0 +1,6 @@
+name: My Module
+type: module
+core: '8.x'
+description: My module with custom codes
+dependencies:
+  - telephone

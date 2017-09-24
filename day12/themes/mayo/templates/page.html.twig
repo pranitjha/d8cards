@@ -1,0 +1,340 @@
+{#
+/**
+ * @file
+ * Mayo's theme implementation to display a single page.
+ *
+ * The doctype, html, head and body tags are not in this template. Instead they
+ * can be found in the html.html.twig template normally located in the
+ * core/modules/system directory.
+ *
+ * Available variables:
+ *
+ * General utility variables:
+ * - base_path: The base URL path of the Drupal installation. Will usually be
+ *   "/" unless you have installed Drupal in a sub-directory.
+ * - is_front: A flag indicating if the current page is the front page.
+ * - logged_in: A flag indicating if the user is registered and signed in.
+ * - is_admin: A flag indicating if the user has permission to access
+ *   administration pages.
+ *
+ * Site identity:
+ * - front_page: The URL of the front page. Use this instead of base_path when
+ *   linking to the front page. This includes the language domain or prefix.
+ * - logo: The url of the logo image, as defined in theme settings.
+ * - site_name: The name of the site. This is empty when displaying the site
+ *   name has been disabled in the theme settings.
+ * - site_slogan: The slogan of the site. This is empty when displaying the site
+ *   slogan has been disabled in theme settings.
+ * - hide_site_name: A flag indicating if the site name has been toggled off on
+ *   the theme settings page. If hidden, the "visually-hidden" class is added
+ *   to make the site name visually hidden, but still accessible.
+ * - hide_site_slogan: A flag indicating if the site slogan has been toggled off
+ *   on the theme settings page. If hidden, the "visually-hidden" class is
+ *   added to make the site slogan visually hidden, but still accessible.
+ *
+ * Navigation:
+ * - breadcrumb: The breadcrumb trail for the current page.
+ *
+ * Page content (in order of occurrence in the default page.html.twig):
+ * - title_prefix: Additional output populated by modules, intended to be
+ *   displayed in front of the main title tag that appears in the template.
+ * - title: The page title, for use in the actual content.
+ * - title_suffix: Additional output populated by modules, intended to be
+ *   displayed after the main title tag that appears in the template.
+ * - messages: Status and error messages. Should be displayed prominently.
+ * - tabs: Tabs linking to any sub-pages beneath the current page (e.g., the
+ *   view and edit tabs when displaying a node).
+ * - action_links: Actions local to the page, such as "Add menu" on the menu
+ *   administration interface.
+ * - node: Fully loaded node, if there is an automatically-loaded node
+ *   associated with the page and the node ID is the second argument in the
+ *   page's path (e.g. node/12345 and node/12345/revisions, but not
+ *   comment/reply/12345).
+ *
+ * Regions:
+ * - page.header: Items for the header region.
+ * - page.menubar: Items for the menubar region.
+ * - page.highlighted: Items for the highlighted content region.
+ * - page.banner_top: Items for the banner top region.
+ * - page.top_column_first: Items for the top first column.
+ * - page.top_column_second: Items for the top second column.
+ * - page.top_column_third: Items for the top third column.
+ * - page.top_column_fourth: Items for the top fourth column.
+ * - page.help: Dynamic help text, mostly for admin pages.
+ * - page.breadcrumb: Items for the breadcrumb region.
+ * - page.content: The main content of the current page.
+ * - page.sidebar_first: Items for the first sidebar.
+ * - page.sidebar_second: Items for the second sidebar.
+ * - page.bottom_column_first: Items for the bottom first column.
+ * - page.bottom_column_second: Items for the bottom second column.
+ * - page.bottom_column_third: Items for the bottom third column.
+ * - page.bottom_column_fourth: Items for the bottom fourth column.
+ * - page.banner_bottom: Items for the bottom banner region.
+ * - page.footer_column_first: Items for the first footer column.
+ * - page.footer_column_second: Items for the second footer column.
+ * - page.footer_column_third: Items for the third footer column.
+ * - page.footer_column_forth: Items for the fourth footer column.
+ * - page.footer: Items for the footer region.
+ *
+ * @see template_preprocess_page()
+ * @see mayo_preprocess_page()
+ * @see html.html.twig
+ */
+#}
+<div id="page-wrapper" style="{{ page_wrapper_style }}">
+<div id="page"{% if page_style %} style="{{ page_style }}"{% endif %}>
+    <header id="header" role="banner" style="{{ header_style }}" aria-label="{{ 'Site header'|t}}">
+    <div class="section clearfix">
+    <div id="header-watermark"{% if header_watermark_style %} style="{{ header_watermark_style }}" {% endif %}>
+    <div class="section clearfix">
+
+      {% if header_searchbox %}
+        <div id="header-searchbox">
+       {{ output_form }}
+        </div>
+      {% endif %}
+
+      {% if header_fontsizer %}
+        <div id="header-fontsizer">
+        <a href="#" class="decreaseFont" title="Decrease text size"></a>
+        <a href="#" class="resetFont"    title="Restore default text size"></a>
+        <a href="#" class="increaseFont" title="Increase text size"></a>
+        </div>
+      {% endif %}
+
+    {{ page.header }}
+
+    </div> <!-- /.section -->
+    </div> <!-- /#header-watermark -->
+    </div></header> <!-- /#header -->
+
+    <div class="clearfix cfie"></div>
+
+    <!-- for nice_menus, superfish -->
+    {% if page.menubar %}
+    <div id="menubar" class="menubar clearfix"
+      {%  if menubar_background %}
+        style="{{ menubar_bg_value }}"
+        {% endif %}>
+
+      {{ page.menubar }}
+    </div>
+    {% endif %}
+    {% if page.highlighted %}
+      {{ page.highlighted }}
+    {% endif %}
+
+    <!-- space between menus and contents -->
+    <div class="spacer clearfix cfie"></div>
+
+    <div id="main-wrapper">
+    <div id="main" class="clearfix"
+      {%  if main_style %}
+        style="{{ main_style }}"
+        {% endif %}>
+
+      {% if page.banner_top %}
+      <div id="banner-top" class="banner clearfix">{{ page.banner_top }}</div>
+      <div class="spacer clearfix cfie"></div>
+      {% endif %}
+
+
+     {% if page.top_column_first or page.top_column_second or
+              page.top_column_third or page.top_column_fourth %}
+      <div id="top-wrapper">
+        <div id="top-columns" class="clearfix">
+          <div class="column-blocks clearfix">
+                <!--column-blocks -->
+                {% if page.top_column_first %}
+                  <div class="column-block-wrapper clearfix" style="width: {{ top_columns_width }}">
+                    <div class="column-block clearfix">
+                      {{ page.top_column_first }}
+                    </div>
+                  </div>
+                {% endif %}
+
+                {% if page.top_column_second %}
+                    <div class="column-block-wrapper clearfix" style="width: {{ top_columns_width }}">
+                      <div class="column-block clearfix">
+                        {{ page.top_column_second }}
+                      </div>
+                    </div>
+                {% endif %}
+
+                {% if page.top_column_third %}
+                    <div class="column-block-wrapper clearfix" style="width: {{ top_columns_width }}">
+                      <div class="column-block clearfix">
+                        {{ page.top_column_third }}
+                      </div>
+                    </div>
+                {% endif %}
+
+                {% if page.top_column_fourth %}
+                    <div class="column-block-wrapper clearfix" style="width: {{ top_columns_width }}">
+                      <div class="column-block clearfix">
+                        {{ page.top_column_fourth }}
+                      </div>
+                    </div>
+                {% endif %}
+          </div>  <!--/.column-blocks -->
+          <div class="spacer clearfix cfie"></div>
+        </div> <!--/#top-columns -->
+      </div> <!-- /#top-wrapper -->
+      {% endif %}
+
+
+      <div class="clearfix cfie"></div>
+
+
+      <!-- main content -->
+      <main id="content" class="column"><section class="section">
+
+        {% if page.breadcrumb %}
+          <div id="breadcrumb">{{ page.breadcrumb }}</div>
+        {% endif %}
+
+        <a id="main-content"></a>
+        {{ title_prefix }}
+        {% if title %}<h1 class="title" id="page-title">{{ title }}</h1>{% endif %}
+        {{ title_suffix }}
+        {% if tabs %}
+          <nav class="tabs" role="navigation" aria-label="{{ 'Tabs'|t }}">
+            {{ tabs }}
+          </nav>
+        {% endif %}
+        {{ page.help }}
+        {% if action_links %}<ul class="action-links">{{ action_links }}</ul>{% endif %}
+        {{ page.content }}
+
+
+      </section></main> <!-- /.section, /#content -->
+
+
+      <!-- sidebar (first) -->
+      {% if (page.sidebar_first) %}
+        <div id="sidebar-first" class="column sidebar"><div class="section">
+          {{ page.sidebar_first }}
+        </div></div> <!-- /.section, /#sidebar-first -->
+      {% endif %}
+      {% if (page.sidebar_second) %}
+        <div id="sidebar-second" class="column sidebar"><div class="section">
+          {{ page.sidebar_second }}
+        </div></div> <!-- /.section, /#sidebar-second -->
+      {% endif %}
+
+
+      <div class="clearfix cfie"></div>
+
+     {% if page.bottom_column_first or page.bottom_column_second or
+              page.bottom_column_third or page.bottom_column_fourth %}
+      <div id="bottom-wrapper">
+        <div id="bottom-columns" class="clearfix">
+          <div class="column-blocks clearfix">
+                <!--column-blocks -->
+                {% if page.bottom_column_first %}
+                  <div class="column-block-wrapper clearfix" style="width: {{ bottom_columns_width }}">
+                    <div class="column-block clearfix">
+                      {{ page.bottom_column_first }}
+                    </div>
+                  </div>
+                {% endif %}
+
+                {% if page.bottom_column_second %}
+                    <div class="column-block-wrapper clearfix" style="width: {{ bottom_columns_width }}">
+                      <div class="column-block clearfix">
+                        {{ page.bottom_column_second }}
+                      </div>
+                    </div>
+                {% endif %}
+
+                {% if page.bottom_column_third %}
+                    <div class="column-block-wrapper clearfix" style="width: {{ bottom_columns_width }}">
+                      <div class="column-block clearfix">
+                        {{ page.bottom_column_third }}
+                      </div>
+                    </div>
+                {% endif %}
+
+                {% if page.bottom_column_fourth %}
+                    <div class="column-block-wrapper clearfix" style="width: {{ bottom_columns_width }}">
+                      <div class="column-block clearfix">
+                        {{ page.bottom_column_fourth }}
+                      </div>
+                    </div>
+                {% endif %}
+          </div>  <!--/.column-blocks -->
+          <div class="spacer clearfix cfie"></div>
+
+
+        </div> <!--/#bottom-columns -->
+      </div> <!-- /#bottom-wrapper -->
+      {% endif %}
+
+      <div class="clearfix cfie"></div>
+
+
+      {% if page.banner_bottom %}
+      <div id="spacer" class="clearfix cfie"></div>
+      <div id="banner-bottom" class="banner clearfix">{{ page.banner_bottom }}</div>
+      {% endif %}
+
+    </div> <!-- /#main -->
+    </div> <!-- /#main-wrapper -->
+
+    <!-- space between contents and footer -->
+    <div id="spacer" class="clearfix cfie"></div>
+
+    <div id="footer-wrapper">
+     {% if page.footer_column_first or page.footer_column_second or
+              page.footer_column_third or page.footer_column_fourth %}
+      <div id="footer-columns" class="clearfix">
+          <div class="column-blocks clearfix">
+                <!--column-blocks -->
+                {% if page.footer_column_first %}
+                  <div class="column-block-wrapper clearfix" style="width: {{ footer_columns_width }}">
+                    <div class="column-block clearfix">
+                      {{ page.footer_column_first }}
+                    </div>
+                  </div>
+                {% endif %}
+
+                {% if page.footer_column_second %}
+                    <div class="column-block-wrapper clearfix" style="width: {{ footer_columns_width }}">
+                      <div class="column-block clearfix">
+                        {{ page.footer_column_second }}
+                      </div>
+                    </div>
+                {% endif %}
+
+                {% if page.footer_column_third %}
+                    <div class="column-block-wrapper clearfix" style="width: {{ footer_columns_width }}">
+                      <div class="column-block clearfix">
+                        {{ page.footer_column_third }}
+                      </div>
+                    </div>
+                {% endif %}
+
+                {% if page.footer_column_fourth %}
+                    <div class="column-block-wrapper clearfix" style="width: {{ footer_columns_width }}">
+                      <div class="column-block clearfix">
+                        {{ page.footer_column_fourth }}
+                      </div>
+                    </div>
+                {% endif %}
+          </div>  <!--/.column-blocks -->
+          <div class="spacer clearfix cfie"></div>
+
+      </div> <!--/#footer-columns -->
+      {% endif %}
+
+      {% if page.footer %}
+      <div id="footer"><div class="section">
+        {{ page.footer }}
+      </div></div> <!-- /.section, /#footer -->
+      {% endif %}
+
+    </div> <!-- /#footer-wrapper -->
+
+
+  </div> <!-- /#page -->
+</div> <!-- /#page-wrapper -->

@@ -1,0 +1,54 @@
+entity.mymodule_contact.canonical:
+  path: '/mymodule_contact/{mymodule_contact}'
+  defaults:
+  # Calls the view controller, defined in the annotation of the contact entity
+    _entity_view: 'mymodule_contact'
+    _title: 'Contact Content'
+  requirements:
+  # Calls the access controller of the entity, $operation 'view'
+    _entity_access: 'mymodule_contact.view'
+
+entity.mymodule_contact.collection:
+  path: '/mymodule_contact/list'
+  defaults:
+  # Calls the list controller, defined in the annotation of the contact entity.
+    _entity_list: 'mymodule_contact'
+    _title: 'Contact List'
+  requirements:
+  # Checks for permission directly.
+    _permission: 'view contact entity'
+
+mymodule.contact_add:
+  path: '/mymodule_contact/add'
+  defaults:
+  # Calls the form.add controller, defined in the contact entity.
+    _entity_form: mymodule_contact.add
+    _title: 'Add Contact'
+  requirements:
+    _entity_create_access: 'mymodule_contact'
+
+entity.mymodule_contact.edit_form:
+  path: '/mymodule_contact/{mymodule_contact}/edit'
+  defaults:
+  # Calls the form.edit controller, defined in the contact entity.
+    _entity_form: mymodule_contact.edit
+    _title: 'Edit Contact'
+  requirements:
+    _entity_access: 'mymodule_contact.edit'
+
+entity.mymodule_contact.delete_form:
+  path: '/contact/{mymodule_contact}/delete'
+  defaults:
+    # Calls the form.delete controller, defined in the contact entity.
+    _entity_form: mymodule_contact.delete
+    _title: 'Delete Contact'
+  requirements:
+    _entity_access: 'mymodule_contact.delete'
+
+mymodule.contact_settings:
+  path: 'admin/structure/mymodule_contact_settings'
+  defaults:
+    _form: '\Drupal\mymodule\Form\ContactSettingsForm'
+    _title: 'Contact Settings'
+  requirements:
+    _permission: 'administer contact entity'
