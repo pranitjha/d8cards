@@ -1,0 +1,17 @@
+name: My Great Theme
+type: theme
+description: A simple custom theme
+package: Custom
+core: 8.x
+screenshot: mytheme.png
+
+regions:
+  header: Header
+  content: Content
+  sidebar_first: Sidebar First
+  footer: Footer
+  page_top: Page Top
+  page_bottom: Page Bottom
+  
+libraries:
+  - mytheme/global-css

@@ -1,0 +1,63 @@
+/* ---------- Color Module Styles ----------- */
+
+body {
+  color: #3b3b3b;
+  background: #292929;
+}
+#page,
+#main-wrapper,
+.region-primary-menu .menu-item a.is-active,
+.region-primary-menu .menu-item--active-trail a {
+  background: transperent;
+}
+.tabs ul.primary li a.is-active {
+  background-color: transperent;
+}
+.tabs ul.primary li.is-active a {
+  background-color: transperent;
+  border-bottom-color: #ffffff;
+}
+a,
+.link {
+  color: #0071b3;
+}
+a:hover,
+a:focus,
+.link:hover,
+.link:focus {
+  color: #018fe2;
+}
+a:active,
+.link:active {
+  color: #23aeff;
+}
+.sidebar .block {
+  border-color: #f5f5f5;
+  background-color: #F5F5F5;
+}
+.site-footer {
+  background: #2C3A4D;
+}
+.region-header,
+.region-header a,
+.region-header li a.is-active,
+#name-and-slogan,
+.site-branding-block,
+#name-and-slogan a,
+.site-branding-block a {
+  color: #6d6d6d;
+}
+
+/* ---------- Color Form ----------- */
+
+[dir="rtl"] .color-form .color-palette {
+  margin-left: 0;
+  margin-right: 20px;
+}
+[dir="rtl"] .color-form .form-item label {
+  float: right;
+}
+[dir="rtl"] .color-form .color-palette .lock {
+  right: -20px;
+  left: 0;
+}
