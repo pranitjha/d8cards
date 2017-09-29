@@ -1,0 +1,30 @@
+mayo.smalltouch:
+  label: smalltouch portrait
+  mediaQuery: 'only screen and(min-width: 0px) and (max-width: 320px)'
+  weight: 4
+  multipliers:
+    - 1x
+mayo.smalltouch_landscape:
+  label: smalltouch landscape
+  mediaQuery: 'only screen and (min-width: 321px) and (max-width: 480px)'
+  weight: 3
+  multipliers:
+    - 1x
+mayo.tablet:
+  label: tablet portrait
+  mediaQuery: 'only screen and (min-width: 481px) and (max-width: 768px)'
+  weight: 2
+  multipliers:
+    - 1x
+mayo.tablet_landscape:
+  label: tablet landscape
+  mediaQuery: 'only screen and (min-width: 769px) and (max-width: 1024px)'
+  weight: 1
+  multipliers:
+    - 1x
+mayo.big_screen:
+  label: big screen
+  mediaQuery: 'only screen and (min-width: 1025px)'
+  weight: 0
+  multipliers:
+    - 1x
