@@ -1,0 +1,66 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a single Drupal page while offline.
+ *
+ * All of the available variables are mirrored in html.html.twig.
+ * Some may be blank but they are provided for consistency.
+ *
+ * @see template_preprocess_maintenance_page()
+ *
+ * @ingroup themeable
+ */
+#}
+<!DOCTYPE html>
+<html{{ html_attributes }}>
+<head>
+  {{ head }}
+  <title>{{ head_title }}</title>
+  {{ styles }}
+  {{ scripts }}
+</head>
+<body class="{{ attributes.class }}">
+
+<div id="wrap" class="clearfix">
+
+  <header id="header" class="clearfix" role="banner">
+    <div>
+      {% if logo %}
+        <div id="logo">
+          <a href="{{ front_page }}" title="{{ 'Home'|t }}" rel="home">
+            <img src="{{ logo }}" alt="{{ 'Home'|t }}"/>
+          </a>
+        </div>
+      {% endif %}
+
+      {% if site_name or site_slogan %}
+        <hgroup class="name-and-slogan" id="sitename">
+
+          {% if site_name %}
+            <h2 class="site-name">
+              <a href="{{ front_page }}" title="{{ 'Home'|t }}" rel="home">{{ site_name }}</a>
+            </h2>
+          {% endif %}
+
+          {% if site_slogan %}
+            <p class="site-slogan">{{ site_slogan }}</p>
+          {% endif %}
+        </hgroup>{# ./name-and-slogan #}
+      {% endif %}
+    </div>
+
+  </header>
+
+  <section id="main" role="main" class="clearfix">
+    {{ messages }}
+    <a id="main-content"></a>
+    {% if title %}
+      <h1>{{ title }}</h1>
+    {% endif %}
+    {{ content }}
+  </section> <!-- /#main -->
+
+</div>{# /#wrap #}
+
+</body>
+</html>

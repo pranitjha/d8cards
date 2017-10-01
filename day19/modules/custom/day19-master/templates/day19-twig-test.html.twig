@@ -1,0 +1,13 @@
+Your template goes here..<br/>
+
+{% if var1  %}
+  <span class="{{ var2.1.c|clean_class }}">{{ var1 }}</span>
+{% endif %}
+<div>
+  {{ var2.3.g }}
+</div>
+
+<span class="{% for i in 0..5 %}minion-{{ i }} {% endfor %}">
+    {{ "Hello"|t }}
+</span>
+

@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @file
+ * Contains star_rating.module..
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_theme().
+ */
+function mymodule_theme() {
+  return array(
+    'star_rating' => array(
+      'variables' => array('ratingvalue' => NULL),
+      'template' => 'star-rating-formatter',
+    ),
+  );
+}

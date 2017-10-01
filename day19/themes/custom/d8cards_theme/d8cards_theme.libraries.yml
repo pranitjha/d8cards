@@ -1,0 +1,7 @@
+global-styling:
+   version: 1.0
+   css:
+    theme:
+      css/layout.css : {}
+   js:
+     #js/your_js.js : {}
