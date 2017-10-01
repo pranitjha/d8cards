@@ -1,0 +1,6 @@
+services:
+  mymodule.allow_access_origin:
+    class: Drupal\mymodule\EventSubscriber\CustomHeaderSubscriber
+    arguments: ['@current_user']
+    tags:
+      - { name: event_subscriber }
