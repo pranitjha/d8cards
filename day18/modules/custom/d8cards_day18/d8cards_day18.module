@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Contains d8cards_day18.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function d8cards_day18_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the d8cards_day18 module.
+    case 'help.page.d8cards_day18':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Day 18 ­ Events and Subscribers') . '</p>';
+      return $output;
+
+    default:
+  }
+}

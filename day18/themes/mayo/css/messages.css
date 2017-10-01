@@ -1,0 +1,18 @@
+/* ---------------- Messages  ----------------- */
+
+#messages {
+  padding: 9px 0 0;
+  margin: 0 auto;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.has-featured-top .highlighted {
+  background: #f0f0f0;
+  background: rgba(30, 50, 10, 0.08);
+}
+div.messages {
+  margin: 0 0 0 6px; /* LTR */
+}
+[dir="rtl"] div.messages {
+  margin-right: 23px;
+  margin-left: 15px;
+}

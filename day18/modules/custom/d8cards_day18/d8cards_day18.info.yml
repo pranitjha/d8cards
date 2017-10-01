@@ -1,0 +1,5 @@
+name: d8cards_day18
+type: module
+description: Day 18 ­ Events and Subscribers
+core: 8.x
+package: D8 cards

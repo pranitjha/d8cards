@@ -1,0 +1,23 @@
+name: elegant gardens
+type: theme
+description: fresh green theme for elegant gardens
+core: 8.x
+base theme: classy
+screenshot: screenshot.png
+
+libraries:
+  - eg/eg-css
+  - eg/quicksand
+  - core/normalize
+  
+regions:
+  header: Header
+  highlighted: Hghlighted
+  content: Content
+  sidebar_first: Sideebar First
+  sidebar_second: Sidebar Second
+  front: Front
+  footer: Footer
+  page_top: Page Top
+  page_bottom: Page Bottom
+  

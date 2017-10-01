@@ -1,0 +1,5 @@
+services:
+  d8cards_day18.page_event_subscriber:
+    class: Drupal\d8cards_day18\EventSubscriber\PageExampleSubscriber
+    tags:
+      - { name: event_subscriber }
