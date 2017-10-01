@@ -1,0 +1,16 @@
+aside.layout-sidebar-first{
+  width: 15%;
+  float: left;
+}
+
+aside.layout-sidebar-second{
+  width: 15%;
+  float: left;
+}
+
+.layout-content {
+  float: left;
+  width: 65%;
+  margin-left: 2.5%;
+  margin-right: 2.5%;
+}
